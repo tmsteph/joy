@@ -3,10 +3,24 @@
   <head>
     <meta charset="UTF-8" />
     <title>Sandbox</title>
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self' blob: data:; script-src 'self' 'unsafe-inline'; connect-src *; style-src 'self' 'unsafe-inline'">
+    <meta http-equiv="Content-Security-Policy"
+          content="default-src 'self' blob: data:; script-src 'self' 'unsafe-inline'; connect-src *; style-src 'self' 'unsafe-inline'">
+    <style>
+      body {
+        margin: 0;
+        font-family: monospace;
+        background: #f9fbfd;
+        padding: 10px;
+      }
+      #SecureRender {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+      }
+    </style>
   </head>
   <body>
-    <h2>Sandbox Ready</h2>
+    <div id="SecureRender"></div>
     <script src="./sandbox.js"></script>
   </body>
 </html>
