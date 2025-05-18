@@ -1,24 +1,9 @@
 console.log("✅ sandbox.js loaded");
 
-var sr = sr || {};
-sr.how = sr.how || {};
+var sr = {};
+sr.how = {};
 
-// Handles basic key-value storage sync
-sr.how.store = function (msg, eve) {
-  if (msg.put !== undefined) {
-    localStorage.setItem(msg.get, JSON.stringify(msg.put));
-  } else if (msg.get) {
-    const value = JSON.parse(localStorage.getItem(msg.get));
-    eve.source.postMessage({
-      how: 'store',
-      to: msg.via,
-      ack: msg.ack,
-      ask: [value],
-    }, '*');
-  }
-};
-
-// Renders basic visual layout blocks like in the screenshot
+// Simple visual block renderer
 sr.how.view = function (list) {
   const container = document.getElementById('SecureRender');
   if (!container) return;
@@ -48,19 +33,15 @@ sr.how.view = function (list) {
   });
 };
 
-// General message handler
+// Listen for messages
 window.addEventListener("message", function (e) {
   const msg = e.data;
-  if (!msg) return;
 
-  // Message is an array: view update
+  // If it's an array of blocks
   if (Array.isArray(msg)) {
     sr.how.view(msg);
     return;
   }
 
-  // Otherwise look for .how and call that
-  if (msg.how && typeof sr.how[msg.how] === 'function') {
-    sr.how[msg.how](msg, e);
-  }
+  // Optional: handle 'store' messages here if needed
 });
