@@ -161,34 +161,31 @@
         head.into(unit)
     })();
 
-    left = false
-    right = false
-    boost = false
     now = +new Date()
-    if (the.key.Left && the.key.Left - now < 100) {
-        left = true
-    }
-    if (the.key.Right && the.key.Right - now < 100) {
-        right = true
-    }
-    if (the.key.Up && the.key.Up - now < 100) {
-        boost = true
+    keyWarmup = function (key, min, max, ramp) {
+        if (!key) {
+            return 0
+        }
+        return utils.lerp(utils.clamp((now - key) / ramp, 0, 1), min, max)
     }
 
+    leftTurnSpeed = keyWarmup(the.key.Left, 0.03, 0.1, 1000)
+    rightTurnSpeed = keyWarmup(the.key.Right, 0.03, 0.1, 1000)
+    boostSpeed = keyWarmup(the.key.Up, 0.003, 0.01, 1000)
 
-    if (left) {
-        angle -= 0.1
+    if (the.key.Left) {
+        angle -= leftTurnSpeed
     }
-    if (right) {
-        angle += 0.1
+    if (the.key.Right) {
+        angle += rightTurnSpeed
     }
 
     thrust.setAngle(angle)
 
     unit.turn = [angle * 0.159155]
-    if (boost) {
+    if (boostSpeed) {
         console.log("Boosting")
-        thrust.setLength(0.01)
+        thrust.setLength(boostSpeed)
         ship.accelerate(thrust)
     } else {
         thrust.setLength(0)
